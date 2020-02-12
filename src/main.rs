@@ -1,11 +1,11 @@
 use std::io::{self, BufRead};
 
 fn is_add(line: &str) -> bool {
-    line.starts_with("+") && !line.starts_with("+++")
+    line.starts_with('+') && !line.starts_with("+++")
 }
 
 fn is_del(line: &str) -> bool {
-    line.starts_with("-") && !line.starts_with("---")
+    line.starts_with('-') && !line.starts_with("---")
 }
 
 fn word_count(line: &str) -> usize {
@@ -38,4 +38,33 @@ fn main() {
         added_words,
         removed_words
     );
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_counts_words_in_line() {
+        assert_eq!(word_count("this is a line"), 4);
+    }
+
+    #[test]
+    fn test_valid_del_line() {
+        assert!(!is_add("-use std::io::{self, BufRead};"));
+        assert!(is_del("-use std::io::{self, BufRead};"));
+    }
+
+    #[test]
+    fn test_valid_add_line() {
+        assert!(is_add("+use std::io::{self, BufRead};"));
+        assert!(!is_del("+use std::io::{self, BufRead};"));
+    }
+
+    #[test]
+    fn test_file_with_changes() {
+        assert!(!is_add("+++ src/main.rs"));
+        assert!(!is_del("+++ src/main.rs"));
+    }
 }
